@@ -18,7 +18,7 @@ using namespace std;
 int main(){
 
 	Mat input_img;
-	input_img = imread("ramphastosSulphuratus.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
+	input_img = imread("test.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 
 	if(! input_img.data ){
 		cout<< "Failed to open the image!"<< endl;

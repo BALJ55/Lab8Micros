@@ -26,11 +26,9 @@ __device__ int flatten(int col, int row, int width, int height) {
 }
 
 
-__global__ void filter_kernel(unsigned char *d_input, unsigned char *d_output, int rows, int cols, float* d_window, int window_size) {
-  //definición memoria
-  extern __shared__ float smem[];
-  //shared id (radius)
-  const int s_idx = threadIdx.x + RAD;
+__global__ void 
+filter_kernel(unsigned char *d_input, unsigned char *d_output, int rows, int cols, 
+              float* d_window, int window_size) {
 
   //define image row, col position
   const int c = threadIdx.x + blockDim.x * blockIdx.x;
@@ -41,8 +39,6 @@ __global__ void filter_kernel(unsigned char *d_input, unsigned char *d_output, i
 
   // compute flat index
   const int i = flatten(c, r, cols, rows);
-  //cuadrado que respresenta al pixel
-  smem[s_idx] = d_input[i];
  
   float pixel_result = 0;
 
@@ -116,11 +112,9 @@ void filter_gpu(Mat input, Mat output){
   // prepare kernel lauch dimensions
   const dim3 blockSize = dim3(TX, TY);
   const dim3 gridSize = dim3(Bx, By);
-  //memory size implementation
-  const size_t smemSize = ((TX * TY) + (2 * RAD) * sizeof(float));
 
   // launch kernel in GPU
-  filter_kernel<<<gridSize, blockSize, smemSize>>>(d_in, d_out, rows, cols, d_window, window_size);
+  filter_kernel<<<gridSize, blockSize>>>(d_in, d_out, rows, cols, d_window, window_size);
 
   // copy output from device to host
   cudaMemcpy(outputPtr, d_out, rows*cols*sizeof(unsigned char), cudaMemcpyDeviceToHost);

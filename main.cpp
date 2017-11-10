@@ -31,6 +31,6 @@ int main(){
 	// compute filter
 	filter_gpu(input_img, output_img);
 
-	imwrite("output.jpg", output_img);
+	imwrite("filter_ByronMotaH.jpg", output_img);
 	return 0;
 }
